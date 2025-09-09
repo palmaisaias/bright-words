@@ -17,6 +17,7 @@ export default function App() {
 
   const word = SIGHT_WORDS[index]
   const next = () => setIndex(i => (i + 1) % deck.size())
+  const prev = () => setIndex(i => (i - 1 + deck.size()) % deck.size())
 
   const handleSplashDone = () => {
     sessionStorage.setItem('splashSeen', '1')
@@ -45,12 +46,12 @@ export default function App() {
               word={word}
               onLetterClick={(ch) => player.playLetter(ch)}
             />
-            <Controls word={word} player={player} onNext={next} />
+            <Controls word={word} player={player} onNext={next} onPrev={prev} />
           </motion.section>
         </AnimatePresence>
 
         {/* Optional decorative image */}
-        <img src="/images/stars.png" alt="Decor" className="pointer-events-none select-none fixed right-4 bottom-4 w-54 opacity-60"/>
+        <img src="/images/stars.png" alt="Decor" className="pointer-events-none select-none fixed right-4 bottom-4 w-54 opacity-60" />
       </main>
     </div>
   )
