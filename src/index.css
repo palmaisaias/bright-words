@@ -1,0 +1,26 @@
+@import "tailwindcss";
+
+@layer base {
+html, body, #root { height: 100%; }
+}
+
+@layer utilities {
+.btn {
+@apply inline-flex items-center justify-center rounded-xl px-5 py-3 text-lg font-semibold transition-transform select-none;
+}
+.btn-primary { 
+  @apply bg-sky-600 text-white hover:bg-sky-700 active:scale-95; 
+}
+
+.btn-ghost { 
+  @apply bg-white/50 text-sky-800 hover:bg-white/70 backdrop-blur; 
+}
+
+.btn-secondary {
+  @apply bg-sky-400 text-white hover:bg-sky-500 active:scale-95;
+}
+
+.card { 
+  @apply rounded-3xl bg-white/70 shadow-xl backdrop-blur p-6; 
+}
+}
