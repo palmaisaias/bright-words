@@ -23,7 +23,7 @@ style={{ display: 'inline-block' }}
 </motion.span>
 ))}
 </div>
-<p className="mt-4 text-sky-900/70">Hover a letter to make it big. Click to hear it.</p>
+<p className="mt-4 text-sky-900/70">Click the letter to hear it!</p>
 </div>
 )
 }
