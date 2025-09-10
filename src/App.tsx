@@ -53,7 +53,7 @@ export default function App() {
     <div className="min-h-full bg-gradient-to-br from-sky-50 via-white to-emerald-50">
       <main className="mx-auto max-w-4xl px-6 pt-16 pb-24 text-center">
         <header className="mb-10">
-          <h1 className="text-3xl sm:text-4xl font-black text-sky-800 tracking-tight">Sight Words</h1>
+          <h1 className="text-3xl sm:text-4xl font-black text-sky-800 tracking-tight">Hi, Alexander!</h1>
           <p className="text-sky-900/70 mt-2">40 words. Tap through. Listen and learn.</p>
           <div className="mt-4">
             <ProgressBar
