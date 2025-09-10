@@ -6,6 +6,8 @@ import { SoundPlayer } from './engine/SoundPlayer'
 import Splash from './components/Splash'
 import WordCard from './components/WordCard'
 import Controls from './components/Controls'
+import { useEffect } from 'react'
+import ProgressBar from './components/ProgressBar'
 
 export default function App() {
   const deck = useMemo(() => new WordDeck(SIGHT_WORDS), [])
@@ -14,6 +16,16 @@ export default function App() {
   // Show splash once per tab/session. Refresh won't re-show it.
   const [ready, setReady] = useState(() => sessionStorage.getItem('splashSeen') === '1')
   const [index, setIndex] = useState(0)
+
+  const [seen, setSeen] = useState<Set<number>>(() => {
+    try {
+      const raw = sessionStorage.getItem('seenIndices')
+      const arr = raw ? (JSON.parse(raw) as number[]) : []
+      return new Set(arr)
+    } catch {
+      return new Set<number>()
+    }
+  })
 
   const word = SIGHT_WORDS[index]
   const next = () => setIndex(i => (i + 1) % deck.size())
@@ -24,6 +36,17 @@ export default function App() {
     setReady(true)
   }
 
+    // Mark the current word as "seen" whenever index changes
+  useEffect(() => {
+    setSeen(prev => {
+      if (prev.has(index)) return prev
+      const updated = new Set(prev)
+      updated.add(index)
+      try { sessionStorage.setItem('seenIndices', JSON.stringify([...updated])) } catch {}
+      return updated
+    })
+  }, [index])
+
   if (!ready) return <Splash onDone={handleSplashDone} player={player} />
 
   return (
@@ -32,6 +55,13 @@ export default function App() {
         <header className="mb-10">
           <h1 className="text-3xl sm:text-4xl font-black text-sky-800 tracking-tight">Sight Words</h1>
           <p className="text-sky-900/70 mt-2">40 words. Tap through. Listen and learn.</p>
+          <div className="mt-4">
+            <ProgressBar
+              total={SIGHT_WORDS.length}
+              seen={seen.size}
+              isComplete={seen.size === SIGHT_WORDS.length}
+            />
+          </div>
         </header>
 
         <AnimatePresence mode="wait">
