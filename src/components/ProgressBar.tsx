@@ -31,7 +31,7 @@ export default function ProgressBar({ total, seen, isComplete = false }: Props) 
       >
         {/* Fill */}
         <motion.div
-          className="absolute left-0 top-0 h-full rounded-full bg-gradient-to-r from-emerald-400 via-sky-400 to-violet-400"
+          className="absolute left-0 top-0 h-full rounded-full bg-gradient-to-r from-teal-400 via-cyan-400 to-blue-500"
           initial={{ width: 0 }}
           animate={{ width: `${pct}%` }}
           transition={{ duration: 0.35, ease: 'easeOut' }}
