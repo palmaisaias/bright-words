@@ -10,6 +10,8 @@ const WELCOME_POOL = [
   'welcome5.mp3',
   'welcome6.mp3',
   'welcome7.mp3',
+  'welcome8.mp3',
+  'welcome9.mp3',
 ]
 
 type Props = { onDone: () => void; player: SoundPlayer }
