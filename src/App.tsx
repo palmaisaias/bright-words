@@ -8,6 +8,7 @@ import WordCard from './components/WordCard'
 import Controls from './components/Controls'
 import { useEffect } from 'react'
 import ProgressBar from './components/ProgressBar'
+import { Link } from 'react-router-dom'
 
 export default function App() {
   const deck = useMemo(() => new WordDeck(SIGHT_WORDS), [])
@@ -36,7 +37,7 @@ export default function App() {
     setReady(true)
   }
 
-    // Mark the current word as "seen" whenever index changes
+  // Mark the current word as "seen" whenever index changes
   useEffect(() => {
     setSeen(prev => {
       if (prev.has(index)) return prev
@@ -79,6 +80,16 @@ export default function App() {
             <Controls word={word} player={player} onNext={next} onPrev={prev} />
           </motion.section>
         </AnimatePresence>
+
+        {/* Numbers CTA at bottom */}
+        <div className="mt-10 flex flex-col items-center justify-end min-h-[30vh]">
+          <p className="text-sky-900/70 text-sm sm:text-base mb-2">
+            Want to practice numbers too? Click here!
+          </p>
+          <Link to="/numbers" className="btn btn-primary text-sm sm:text-base">
+            Numbers 1-100
+          </Link>
+        </div>
 
         {/* Optional decorative image */}
         <img src="/images/stars.png" alt="Decor" className="pointer-events-none select-none fixed right-4 bottom-4 w-54 opacity-60" />

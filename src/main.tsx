@@ -1,10 +1,17 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
-import './index.css'
+import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import App from './App'
+import NumberCounter from './NumberCounter'
+import './index.css'
+
+const router = createBrowserRouter([
+  { path: '/', element: <App /> },
+  { path: '/numbers', element: <NumberCounter /> },
+])
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
-<React.StrictMode>
-<App />
-</React.StrictMode>
+  <React.StrictMode>
+    <RouterProvider router={router} />
+  </React.StrictMode>
 )
