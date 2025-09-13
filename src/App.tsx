@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useMemo, useRef, useState, useEffect } from 'react'
 import { AnimatePresence, motion } from 'motion/react'
 import { SIGHT_WORDS } from './data/sightWords'
 import { WordDeck } from './engine/WordDeck'
@@ -6,9 +6,9 @@ import { SoundPlayer } from './engine/SoundPlayer'
 import Splash from './components/Splash'
 import WordCard from './components/WordCard'
 import Controls from './components/Controls'
-import { useEffect } from 'react'
-import ProgressBar from './components/ProgressBar'
+import NumberBar from './components/NumberBar'
 import { Link } from 'react-router-dom'
+import { fireConfettiFor } from './lib/Confetti'
 
 export default function App() {
   const deck = useMemo(() => new WordDeck(SIGHT_WORDS), [])
@@ -28,6 +28,10 @@ export default function App() {
     }
   })
 
+  const total = SIGHT_WORDS.length
+  const seenCount = seen.size
+  const isComplete = seenCount === total
+
   const word = SIGHT_WORDS[index]
   const next = () => setIndex(i => (i + 1) % deck.size())
   const prev = () => setIndex(i => (i - 1 + deck.size()) % deck.size())
@@ -37,7 +41,7 @@ export default function App() {
     setReady(true)
   }
 
-  // Mark the current word as "seen" whenever index changes
+  // Mark the current word as seen whenever index changes
   useEffect(() => {
     setSeen(prev => {
       if (prev.has(index)) return prev
@@ -48,6 +52,40 @@ export default function App() {
     })
   }, [index])
 
+  // Completion effects: confetti for 10s and play the song once per completion
+  const completionFiredRef = useRef(false)
+  const completionAudioRef = useRef<HTMLAudioElement | null>(null)
+
+  useEffect(() => {
+    // preload once
+    const a = new Audio('/audio/janeiro_snip.mp3')
+    a.preload = 'auto'
+    completionAudioRef.current = a
+  }, [])
+
+  useEffect(() => {
+    if (isComplete && !completionFiredRef.current) {
+      completionFiredRef.current = true
+      // confetti 10s
+      fireConfettiFor(10_000)
+      // play audio
+      const a = completionAudioRef.current
+      if (a) {
+        try {
+          a.currentTime = 0
+          const p = a.play()
+          if (p && typeof (p as any).catch === 'function') {
+            ;(p as Promise<void>).catch(() => {})
+          }
+        } catch {}
+      }
+    }
+    if (!isComplete) {
+      // reset so it can fire again on a fresh run
+      completionFiredRef.current = false
+    }
+  }, [isComplete])
+
   if (!ready) return <Splash onDone={handleSplashDone} player={player} />
 
   return (
@@ -57,10 +95,11 @@ export default function App() {
           <h1 className="text-3xl sm:text-4xl font-black text-sky-800 tracking-tight">Hi, Alexander!</h1>
           <p className="text-sky-900/70 mt-2">40 words. Tap through. Listen and learn.</p>
           <div className="mt-4">
-            <ProgressBar
-              total={SIGHT_WORDS.length}
-              seen={seen.size}
-              isComplete={seen.size === SIGHT_WORDS.length}
+            <NumberBar
+              min={0}
+              max={total}
+              value={seenCount}
+              label="Lesson progress"
             />
           </div>
         </header>
